@@ -28,8 +28,8 @@ class MyBattlesnakeHeuristics:
         your_snake_body = json["you"]["body"]
         i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
 
-        if len(your_snake_body) < 2:
-            return None 
+        if len(your_snake_body) < 3:
+            return None,None
 
         path = a_star(initial_state=State(
             body=your_snake_body,
@@ -39,15 +39,15 @@ class MyBattlesnakeHeuristics:
         next_move = path[1].body[0]
 
         tail_direction = None
-        if next_move["x"] == i - 1:
+        if next_move["y"] == i - 1:
             tail_direction = 0
-        if next_move["x"] == i + 1:
+        if next_move["y"] == i + 1:
             tail_direction = 1
-        if next_move["y"] == j - 1:
+        if next_move["x"] == j - 1:
             tail_direction = 2
-        if next_move["y"] == j + 1:
+        if next_move["x"] == j + 1:
             tail_direction = 3
-        return tail_direction
+        return next_move, tail_direction
 
 
 
@@ -108,13 +108,13 @@ class MyBattlesnakeHeuristics:
         # If you think of something else, you can edit how `best_action` is calculated
         best_action = int(np.argmax(action))
                 
-        # Example heuristics to eat food that you are close to.
         if health[snake_id] > 70:
-            tail_direction = self.tail_chase(json)
-            if tail_direction:
-                best_action = tail_direction
-                log_string = "Chasing own tail."
+            next_move,tail_direction = self.tail_chase(json)
+            if next_move is not None:
+                best_action = tail_direction if tail_direction is not None else best_action
+                log_string = f"{next_move}, {tail_direction}"
 
+        # Example heuristics to eat food that you are close to.
         if health[snake_id] < 30:
             food_direction = self.go_to_food_if_close(state, json)
             if food_direction:
