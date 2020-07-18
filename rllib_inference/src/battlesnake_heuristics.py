@@ -13,6 +13,8 @@
 
 import numpy as np
 import random
+from rllib_inference.src.a_star_search import a_star
+from rllib_inference.src.snake_state import State
 
 class MyBattlesnakeHeuristics:
     '''
@@ -21,6 +23,34 @@ class MyBattlesnakeHeuristics:
     FOOD_INDEX = 0
     def __init__(self):
         pass
+
+    def tail_chase(self, json):
+        your_snake_body = json["you"]["body"]
+        i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
+
+        if len(your_snake_body) < 2:
+            return None 
+
+        path = a_star(initial_state=State(
+            body=your_snake_body,
+            board_height=json["board"]["height"],
+            board_width=json["board"]["width"]))
+
+        next_move = path[1].body[0]
+
+        tail_direction = None
+        if next_move["x"] == i - 1:
+            tail_direction = 0
+        if next_move["x"] == i + 1:
+            tail_direction = 1
+        if next_move["y"] == j - 1:
+            tail_direction = 2
+        if next_move["y"] == j + 1:
+            tail_direction = 3
+        return tail_direction
+
+
+
     
     def go_to_food_if_close(self, state, json):
         '''
@@ -79,6 +109,12 @@ class MyBattlesnakeHeuristics:
         best_action = int(np.argmax(action))
                 
         # Example heuristics to eat food that you are close to.
+        if health[snake_id] > 70:
+            tail_direction = self.tail_chase(json)
+            if tail_direction:
+                best_action = tail_direction
+                log_string = "Chasing own tail."
+
         if health[snake_id] < 30:
             food_direction = self.go_to_food_if_close(state, json)
             if food_direction:
