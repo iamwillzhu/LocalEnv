@@ -13,8 +13,8 @@
 
 import numpy as np
 import random
-from rllib_inference.src.a_star_search import a_star
-from rllib_inference.src.snake_state import State
+from .a_star_search import a_star
+from .snake_state import State
 
 class MyBattlesnakeHeuristics:
     '''
