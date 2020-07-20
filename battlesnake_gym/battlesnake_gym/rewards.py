@@ -34,7 +34,7 @@ class SimpleRewards(Rewards):
                             "hit_other_snake": 0,
                             "hit_self": 0,
                             "was_eaten": 0,
-                            "other_snake_hit_body": 0,
+                            "other_snake_hit_body": 5,
                             "forbidden_move": -1000,
                             "starved": 0}
 
