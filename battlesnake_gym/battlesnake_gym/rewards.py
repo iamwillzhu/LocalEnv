@@ -25,17 +25,17 @@ class SimpleRewards(Rewards):
     Simple class to handle a fixed reward scheme
     '''
     def __init__(self):
-        self.reward_dict = {"another_turn": 1,  
-                            "ate_food": 0.05,
-                            "won": 5,
+        self.reward_dict = {"another_turn": 0.5,  
+                            "ate_food": 5,
+                            "won": 1000,
                             "died": -1,
-                            "ate_another_snake": 0.5,
+                            "ate_another_snake": 50,
                             "hit_wall": 0,
                             "hit_other_snake": 0,
                             "hit_self": 0,
                             "was_eaten": 0,
                             "other_snake_hit_body": 0,
-                            "forbidden_move": -1,
+                            "forbidden_move": -1000,
                             "starved": 0}
 
     def get_reward(self, name, snake_id, episode):
